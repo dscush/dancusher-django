@@ -10,21 +10,39 @@ def index(request):
 
 def recipe_details(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id)
+    headers = ["Ingredient", "Amount", "Unit", "Calories", "Grams Fat", "Percent Fat", "Grams Protien", "Percent Protein"]
     ingredients = [[
         ingredient.ingredient.name,
+        ingredient.count * ingredient.ingredient.serving_size,
+        ingredient.ingredient.unit,
         round(ingredient.ingredient.calories * ingredient.count),
+        ingredient.ingredient.fat * ingredient.count,
+        str(round((100 * 9 * ingredient.ingredient.fat) / ingredient.ingredient.calories, 2)) + '%',
         ingredient.ingredient.protein * ingredient.count,
-        round((100 * 4 * ingredient.ingredient.protein) / ingredient.ingredient.calories, 2),
+        str(round((100 * 4 * ingredient.ingredient.protein) / ingredient.ingredient.calories, 2)) + '%',
     ] for ingredient in recipe.recipeingredient_set.all()]
     total = [
         'Total',
-        sum([ingredient[1] for ingredient in ingredients]),
-        sum([ingredient[2] for ingredient in ingredients]),
+        recipe.servings,
+        'servings',
+        sum([ingredient[3] for ingredient in ingredients]),
+        sum([ingredient[4] for ingredient in ingredients]),
     ]
-    total.append(round((100 * 4 * total[2]) / total[1], 2))
+    total.append(str(round((100 * 9 * total[4]) / total[3], 2)) + '%')
+    total.append(sum([ingredient[6] for ingredient in ingredients]))
+    total.append(str(round((100 * 4 * total[6]) / total[3], 2)) + '%')
     ingredients.append(total)
-    ingredients.append(['Per Serving', round(total[1] / recipe.servings), round(total[2] / recipe.servings, 2), total[3]])
-    return render(request, 'recipes/recipe_details.html', {'recipe': recipe, 'ingredients': ingredients})
+    ingredients.append([
+        'Per Serving',
+        1,
+        'serving',
+        round(total[3] / recipe.servings),
+        round(total[4] / recipe.servings, 2),
+        total[5],
+        round(total[6] / recipe.servings, 2),
+        total[7],
+    ])
+    return render(request, 'recipes/recipe_details.html', {'recipe': recipe, 'ingredients': ingredients, 'headers': headers})
 
 def ingredient_details(request, ingredient_id):
     response = "You're looking at ingredient %s."

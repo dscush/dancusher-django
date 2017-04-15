@@ -3,17 +3,14 @@
 
 <table>
     <tr>
-        <th>Ingredient</th>
-        <th>Calories</th>
-        <th>Grams Protien</th>
-        <th>Percent Protein</th>
+        {% for header in headers %}
+        <th>{{ header }}</th>
+        {% endfor %}
     </tr>
     {% for ingredient in ingredients %}
     <tr>
         {% for item in ingredient %}
-        <td>
-            {{ item }}
-        </td>
+        <td>{{ item }}</td>
         {% endfor %}
     {% endfor %}
     </tr>
