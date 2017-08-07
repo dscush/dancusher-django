@@ -12,6 +12,7 @@ class Ingredient(models.Model):
     fiber = models.FloatField()
     sugar = models.FloatField()
     protein = models.FloatField()
+    is_vegan = models.BooleanField()
 
     def __str__(self):
         return self.name
@@ -22,6 +23,12 @@ class Recipe(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient')
     servings = models.FloatField()
+
+    def is_vegan(self):
+        for ingredient in self.ingredients.all():
+            if not ingredient.is_vegan:
+                return False
+        return True
 
     def __str__(self):
         return self.name
