@@ -53,13 +53,15 @@ def recipe_details(request, recipe_id):
 
 def ingredient_details(request, ingredient_id):
     ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
-    headers = ["Amount", "Unit", "Calories", "Grams Fat", "Percent Fat", "Grams Protien", "Percent Protein"]
+    headers = ["Amount", "Unit", "Calories", "Fat (g)", "Fat (%)", "Carbs (g)", "Carbs (%)", "Protien (g)", "Protein (%)"]
     ing = [
         ingredient.serving_size,
         ingredient.unit,
         ingredient.calories,
         ingredient.fat,
         str(round((100 * 9 * ingredient.fat) / ingredient.calories, 2)) + '%',
+        ingredient.carbs,
+        str(round((100 * 4 * ingredient.carbs) / ingredient.calories, 2)) + '%',
         ingredient.protein,
         str(round((100 * 4 * ingredient.protein) / ingredient.calories, 2)) + '%',
     ]
