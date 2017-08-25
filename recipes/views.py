@@ -51,5 +51,15 @@ def recipe_details(request, recipe_id):
     return render(request, 'recipes/recipe_details.html', {'recipe': recipe, 'ingredients': ingredients, 'headers': headers})
 
 def ingredient_details(request, ingredient_id):
-    response = "You're looking at ingredient %s."
-    return HttpResponse(response % ingredient_id)
+    ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
+    headers = ["Amount", "Unit", "Calories", "Grams Fat", "Percent Fat", "Grams Protien", "Percent Protein"]
+    ing = [
+        ingredient.serving_size,
+        ingredient.unit,
+        ingredient.calories,
+        ingredient.fat,
+        str(round((100 * 9 * ingredient.fat) / ingredient.calories, 2)) + '%',
+        ingredient.protein,
+        str(round((100 * 4 * ingredient.protein) / ingredient.calories, 2)) + '%',
+    ]
+    return render(request, 'recipes/ingredient_details.html', {'ingredient': ingredient, 'ing': ing, 'headers': headers})

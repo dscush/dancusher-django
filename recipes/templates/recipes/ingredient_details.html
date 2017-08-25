@@ -1,0 +1,24 @@
+{% extends "recipes/base.html" %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>{{ ingredient.name }}</h1>
+            <p>{{ ingredient.description }}</p>
+            
+            <table class="table">
+                <tr>
+                    {% for header in headers %}
+                    <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for item in ing %}
+                    <td>{{ item }}</td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
