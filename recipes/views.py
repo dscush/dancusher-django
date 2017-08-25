@@ -5,7 +5,8 @@ from .models import Recipe, Ingredient
 
 def index(request):
     recipe_list = Recipe.objects.all()
-    context = {'recipe_list': recipe_list}
+    ingredient_list = Ingredient.objects.all()
+    context = {'recipe_list': recipe_list, 'ingredient_list': ingredient_list}
     return render(request, 'recipes/index.html', context)
 
 def recipe_details(request, recipe_id):

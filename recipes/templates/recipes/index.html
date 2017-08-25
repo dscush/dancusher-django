@@ -17,4 +17,20 @@
     </div>
 {% endif %}
 </div>
+<div>
+{% if ingredient_list %}
+    <div>
+        <h2>All Ingredients</h2>
+        <ul>
+        {% for ingredient in ingredient_list %}
+            <li><a href="/recipes/ingredient/{{ ingredient.id }}/">{{ ingredient.name }}</a>{% if ingredient.is_vegan %} <span class="label label-success">V</span>{% endif %}</li>
+        {% endfor %}
+        </ul>
+    </div>
+{% else %}
+    <div>
+        <p>No ingredients are available.</p>
+    </div>
+{% endif %}
+</div>
 {% endblock %}
