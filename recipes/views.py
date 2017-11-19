@@ -1,7 +1,14 @@
+from enum import IntEnum
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 
 from .models import Recipe, Ingredient
+
+class Macro(IntEnum):
+    PROTEIN = 4
+    CARB = 4
+    FAT = 9
 
 def index(request):
     recipe_list = Recipe.objects.all()
@@ -18,11 +25,11 @@ def recipe_details(request, recipe_id):
         ingredient.ingredient.unit,
         round(ingredient.ingredient.calories * ingredient.count),
         ingredient.ingredient.fat * ingredient.count,
-        str(round((100 * 9 * ingredient.ingredient.fat) / ingredient.ingredient.calories, 2)) + '%',
+        _calc_calorie_percent(Macro.FAT, ingredient.ingredient.fat, ingredient.ingredient.calories),
         ingredient.ingredient.carbs * ingredient.count,
-        str(round((100 * 4 * ingredient.ingredient.carbs) / ingredient.ingredient.calories, 2)) + '%',
+        _calc_calorie_percent(Macro.CARB, ingredient.ingredient.carbs, ingredient.ingredient.calories),
         ingredient.ingredient.protein * ingredient.count,
-        str(round((100 * 4 * ingredient.ingredient.protein) / ingredient.ingredient.calories, 2)) + '%',
+        _calc_calorie_percent(Macro.PROTEIN, ingredient.ingredient.protein, ingredient.ingredient.calories),
     ] for ingredient in recipe.recipeingredient_set.all()]
     total = [
         'Total',
@@ -31,11 +38,11 @@ def recipe_details(request, recipe_id):
         sum([ingredient[3] for ingredient in ingredients]),
         sum([ingredient[4] for ingredient in ingredients]),
     ]
-    total.append(str(round((100 * 9 * total[4]) / total[3], 2)) + '%')
+    total.append(_calc_calorie_percent(Macro.FAT, total[4], total[3]))
     total.append(sum([ingredient[6] for ingredient in ingredients]))
-    total.append(str(round((100 * 4 * total[6]) / total[3], 2)) + '%')
+    total.append(_calc_calorie_percent(Macro.CARB, total[6], total[3]))
     total.append(sum([ingredient[8] for ingredient in ingredients]))
-    total.append(str(round((100 * 4 * total[8]) / total[3], 2)) + '%')
+    total.append(_calc_calorie_percent(Macro.PROTEIN, total[8], total[3]))
     ingredients.append(total)
     ingredients.append([
         'Per Serving',
@@ -59,10 +66,13 @@ def ingredient_details(request, ingredient_id):
         ingredient.unit,
         ingredient.calories,
         ingredient.fat,
-        str(round((100 * 9 * ingredient.fat) / ingredient.calories, 2)) + '%',
+        _calc_calorie_percent(Macro.FAT, ingredient.fat, ingredient.calories),
         ingredient.carbs,
-        str(round((100 * 4 * ingredient.carbs) / ingredient.calories, 2)) + '%',
+        _calc_calorie_percent(Macro.CARB, ingredient.carbs, ingredient.calories),
         ingredient.protein,
-        str(round((100 * 4 * ingredient.protein) / ingredient.calories, 2)) + '%',
+        _calc_calorie_percent(Macro.PROTEIN, ingredient.protein, ingredient.calories),
     ]
     return render(request, 'recipes/ingredient_details.html', {'ingredient': ingredient, 'ing': ing, 'headers': headers})
+
+def _calc_calorie_percent(macro_type, macro_grams, total_calories):
+    return str(round((100 * macro_type.value * macro_grams) / total_calories, 2)) + '%'
