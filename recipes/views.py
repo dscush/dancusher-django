@@ -75,4 +75,6 @@ def ingredient_details(request, ingredient_id):
     return render(request, 'recipes/ingredient_details.html', {'ingredient': ingredient, 'ing': ing, 'headers': headers})
 
 def _calc_calorie_percent(macro_type, macro_grams, total_calories):
+    if total_calories == 0:
+        return '0'
     return str(round((100 * macro_type.value * macro_grams) / total_calories, 2)) + '%'
