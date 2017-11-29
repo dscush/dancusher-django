@@ -1,1 +1,1 @@
-This is my website.
+This is a little tool I use to manage recipes with a focus on calculating the nutrition data.  I made it for my own personal use, and while anyone is free to use/fork/ridicule it, I have no intention at this time to clean this up or deploy it for public use.
