@@ -56,6 +56,11 @@ def recipe_details(request, recipe_id):
         round(total[8] / recipe.servings, 2),
         total[9],
     ])
+    ingredients = map(
+        lambda ingredient: map(
+            lambda field: round(field, 3) if type(field) == float else field, ingredient
+        ), ingredients
+    )
     return render(request, 'recipes/recipe_details.html', {'recipe': recipe, 'ingredients': ingredients, 'headers': headers})
 
 def ingredient_details(request, ingredient_id):
