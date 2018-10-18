@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 
 class Ingredient(models.Model):
@@ -23,6 +24,9 @@ class Recipe(models.Model):
     description = models.CharField(max_length=200, null=True, blank=True)
     ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient')
     servings = models.FloatField()
+
+    def get_absolute_url(self):
+        return reverse('recipe_details', kwargs={'recipe_id':self.id})
 
     def is_vegan(self):
         for ingredient in self.ingredients.all():

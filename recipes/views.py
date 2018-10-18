@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Recipe, Ingredient
 
@@ -78,6 +78,15 @@ def ingredient_details(request, ingredient_id):
         _calc_calorie_percent(Macro.PROTEIN, ingredient.protein, ingredient.calories),
     ]
     return render(request, 'recipes/ingredient_details.html', {'ingredient': ingredient, 'ing': ing, 'headers': headers})
+
+def duplicate_recipe(request, recipe_id):
+    recipe = Recipe.objects.get(id=recipe_id)
+    ingredients = recipe.recipeingredient_set.all()
+    recipe.pk = None
+    recipe.save()
+    recipe.recipeingredient_set.set(ingredients)
+    recipe.save()
+    return redirect(recipe)
 
 def _calc_calorie_percent(macro_type, macro_grams, total_calories):
     if total_calories == 0:

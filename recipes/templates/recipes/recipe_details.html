@@ -4,8 +4,16 @@
     <div class="row">
         <div class="col-xs-12">
             <h1>{{ recipe.name }}</h1>
+        </div>
+        <div class="col-xs-6">
             <p>{{ recipe.description }}</p>
-            
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a class="btn btn-primary" href="{% url 'duplicate_recipe' recipe.id %}">Duplicate</a>
+            </p>
+        </div>
+        <div class="col-xs-12">
             <table class="table">
                 <tr>
                     {% for header in headers %}
