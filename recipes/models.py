@@ -29,6 +29,7 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse('recipe_details', kwargs={'recipe_id':self.id})
 
+    @property
     def is_vegan(self):
         for ingredient in self.ingredients.all():
             if not ingredient.is_vegan:
