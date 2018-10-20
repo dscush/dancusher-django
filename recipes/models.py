@@ -14,6 +14,7 @@ class Ingredient(models.Model):
     sugar = models.FloatField()
     protein = models.FloatField()
     is_vegan = models.BooleanField()
+    source_recipe = models.OneToOneField("Recipe", on_delete=models.CASCADE, related_name='as_ingredient', null=True)
 
     def __str__(self):
         return self.name
